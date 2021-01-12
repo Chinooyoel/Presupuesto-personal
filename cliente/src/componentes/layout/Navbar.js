@@ -19,9 +19,6 @@ const Navbar = () => {
                             <Link to={'/listado'} className="nav-link text-white">Operaciones</Link>
                         </li>
                         <li className="nav-item">
-                            <Link to={'/listado'} className="nav-link text-white">Cuenta</Link>
-                        </li>
-                        <li className="nav-item">
                             <button className='btn btn-outline-light'>Cerrar sesion</button>
                         </li>
                     </ul>
