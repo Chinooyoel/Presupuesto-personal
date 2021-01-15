@@ -1,7 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import operacionContext from '../../context/operacion/operacionContext';
 
 
-const Listado = () => {
+const Listado = ({operaciones}) => {
+
+    const {seleccionarOperacion} = useContext(operacionContext);
+
+    if( operaciones.length === 0 ) {
+        return <p className='text-center'>-- No hay operaciones registradas --</p>
+    }
+
+    const elegirOperacion = operacion => {
+        //cambiamos el state
+        seleccionarOperacion(operacion)
+
+        //scroliamos para arriba de la pagina
+        const scrollUp = document.querySelector('.scrollUp');
+        scrollUp.scrollIntoView({ behavior: 'smooth' })
+    }
+
     return ( 
                 <table className='table table-hover w-100 text-center'>
                     <thead>
@@ -14,34 +31,19 @@ const Listado = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className='table-success'>
-                            <td>02/03/2020</td>
-                            <td>2 kg de tomate</td>
-                            <td className='d-none d-md-table-cell'>Comida</td>
-                            <td className='d-none d-md-table-cell'>Ingreso</td>
-                            <td>$110.00</td>
-                        </tr>
-                        <tr className='table-success'>
-                            <td>02/03/2020</td>
-                            <td>2 kg de tomate</td>
-                            <td className='d-none d-md-table-cell'>Comida</td>
-                            <td className='d-none d-md-table-cell'>Ingreso</td>
-                            <td>$110.00</td>
-                        </tr>
-                        <tr className='table-danger'>
-                            <td>02/03/2020</td>
-                            <td>2 kg de tomate</td>
-                            <td className='d-none d-md-table-cell'>Comida</td>
-                            <td className='d-none d-md-table-cell'>Engreso</td>
-                            <td>$110.00</td>
-                        </tr>
-                        <tr className='table-success'>
-                            <td>02/03/2020</td>
-                            <td>2 kg de tomate</td>
-                            <td className='d-none d-md-table-cell'>Comida</td>
-                            <td className='d-none d-md-table-cell'>Ingreso</td>
-                            <td>$110.00</td>
-                        </tr>
+                        {operaciones.map( operacion => (
+                            <tr 
+                                className={`${ operacion.tipo === 'ingreso' ? "table-success" : "table-danger" } pointer`} 
+                                onClick={() => elegirOperacion(operacion)}
+                                key={operacion.idOperacion}
+                            >
+                                <td>{operacion.fecha}</td>
+                                <td>{operacion.concepto}</td>
+                                <td className='d-none d-md-table-cell'>{operacion.categoria}</td>
+                                <td className='d-none d-md-table-cell'>{operacion.tipo}</td>
+                                <td>${operacion.monto}.00</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
                 
