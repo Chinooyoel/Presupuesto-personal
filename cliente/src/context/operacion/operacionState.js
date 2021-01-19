@@ -1,7 +1,8 @@
 import React, { useReducer } from 'react';
-import { ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENEROPERACIONES, SELECCIONAROPERACION } from '../../types';
+import { CREAROPERACION, ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENEROPERACIONES, SELECCIONAROPERACION, OBTENERCATEGORIAS } from '../../types';
 import OperacionContext from './operacionContext';
 import operacionReducer from './operacionReducer';
+import clienteAxios from '../../config/axios';
 
 const OperacionState = props => {
 
@@ -9,7 +10,8 @@ const OperacionState = props => {
         ultimasOperaciones: [],
         operaciones: [],
         operacionSeleccionada: null,
-        balance: 0
+        balance: 0,
+        categorias: []
     });
 
     const [state, dispatch] = useReducer(operacionReducer, initialState);
@@ -17,118 +19,46 @@ const OperacionState = props => {
     //obtener las 10 ultimas funciones registradas
     const obtenerUltimasOperaciones = async () => {
         //mandamos una solicitud GET
-        const operaciones = [
-            {
-                idOperacion: 1,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'egreso',
-                monto: 200
-            },
-            {
-                idOperacion: 2,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 520
-            },
-            {
-                idOperacion: 3,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 2220
-            },            {
-                idOperacion: 4,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 4100
-            }
-        ]
+        try {
+            const cantidadOperaciones = 10;
+            const respuesta = await clienteAxios.get(`/operaciones/obtener/${cantidadOperaciones}`);
+            const operaciones = respuesta.data.operaciones;
 
+            dispatch({
+                type: OBTENER10OPERACIONES,
+                payload: operaciones
+            })
+        } catch (error) {
+            console.log(error)
+        }
 
-        dispatch({
-            type: OBTENER10OPERACIONES,
-            payload: operaciones
-        })
     }
 
-    //obtener todas las operaciones
-    const obtenerOperaciones = async () => {
-        const operaciones = [
-            {
-                idOperacion: 1,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'egreso',
-                monto: 200
-            },
-            {
-                idOperacion: 2,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'egreso',
-                monto: 520
-            },
-            {
-                idOperacion: 3,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 2220
-            },            {
-                idOperacion: 4,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 4100
-            },
-            {
-                idOperacion: 5,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'egreso',
-                monto: 200
-            },
-            {
-                idOperacion: 6,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 520
-            },
-            {
-                idOperacion: 7,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'ingreso',
-                monto: 2220
-            },            {
-                idOperacion: 8,
-                fecha: '09/09/2002', 
-                concepto: 'Abono celular',
-                categoria: 'seguro',
-                tipo: 'egreso',
-                monto: 4100
-            }
-        ]
+    //obtener operaciones por categoria
+    const obtenerOperaciones = async categoria => {
+        //mandamos una solicitud GET
+        try {
+            const cantidadOperaciones = 20;
 
-        dispatch({
-            type: OBTENEROPERACIONES,
-            payload: operaciones
-        })
+            let respuesta;
+
+            if(categoria === '' || !categoria) {
+                respuesta = await clienteAxios.get(`/operaciones/obtener/${cantidadOperaciones}`);
+            }else{
+                respuesta = await clienteAxios.get(`/operaciones/obtener/${cantidadOperaciones}?categoria=${categoria}`);
+            }
+
+            const operaciones = respuesta.data.operaciones;
+
+            dispatch({
+                type: OBTENEROPERACIONES,
+                payload: operaciones
+            })
+
+        } catch (error) {
+            console.log(error)
+        }
+
     }
 
     //seleccionar una operacion para que se pueda modificar o eliminar
@@ -141,23 +71,65 @@ const OperacionState = props => {
 
 
     //eliminar una operacion
-    const eliminarOperacion = operacion => {
-        dispatch({
-            type: ELIMINAROPERACION,
-            payload: operacion
-        })
+    const eliminarOperacion = async operacion => {
+
+        try {
+            const respuesta = await clienteAxios.delete(`/operaciones/${operacion._id}`);
+            console.log(respuesta.data.msg);
+
+            dispatch({
+                type: ELIMINAROPERACION,
+                payload: operacion
+            })
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     //obtener el balance de las operaciones
-    const obtenerBalance = () => {
-        let balance = 100;
+    const obtenerBalance = async () => {
+        try {
+            const respuesta = await clienteAxios.get('/operaciones/balance');
 
-        dispatch({
-            type: OBTENERBALANCE,
-            payload: balance
-        })
+            dispatch({
+                type: OBTENERBALANCE,
+                payload: respuesta.data.balance
+            })
+
+        }catch( error ) {
+            console.log(error)
+        }
+
     }
 
+    //crear operacion
+    const crearOperacion = async operacion => {
+        try {
+            const respuesta = await clienteAxios.post(`/operaciones/crear`, operacion);
+            dispatch({
+                type: CREAROPERACION,
+                payload: respuesta.data.operacion
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
+    //obtener todas las categorias 
+    const obtenerCategorias = async () => {
+        try {
+            const respuesta = await clienteAxios.get(`/categorias`);
+
+            dispatch({
+                type: OBTENERCATEGORIAS,
+                payload: respuesta.data.categorias
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return(
         <OperacionContext.Provider
             value={{
@@ -165,11 +137,14 @@ const OperacionState = props => {
                 operaciones: state.operaciones,
                 operacionSeleccionada: state.operacionSeleccionada,
                 balance: state.balance,
+                categorias: state.categorias,
                 obtenerUltimasOperaciones,
                 obtenerOperaciones,
                 seleccionarOperacion,
                 eliminarOperacion,
-                obtenerBalance
+                obtenerBalance,
+                crearOperacion,
+                obtenerCategorias
             }}
         >
             {props.children}

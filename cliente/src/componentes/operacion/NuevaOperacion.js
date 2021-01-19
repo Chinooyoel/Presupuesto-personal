@@ -1,17 +1,26 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import alertaContext from '../../context/alerta/alertaContext';
+import operacionContext from '../../context/operacion/operacionContext';
 
 const NuevaOperacion = () => {
+
+  const formatoFecha = new Date().toISOString().split('T')[0];;
 
   const [operacion, setOperacion] = useState({
     concepto: '',
     categoria: '',
-    fecha: '',
+    fecha: formatoFecha,
     tipo: '',
     monto: ''
   });
 
   const {alerta, mostrarAlerta} = useContext(alertaContext);
+  const { categorias, crearOperacion, obtenerCategorias} = useContext(operacionContext);
+
+  //para que carguen las categorias cuando cargue el componente
+  useEffect(() => {
+    obtenerCategorias();
+  }, []);
 
   const manejarCambios = e => {
       setOperacion({
@@ -22,15 +31,25 @@ const NuevaOperacion = () => {
 
 
   const validarOperacion = e => {
-      e.preventDefault();
+    e.preventDefault();
 
-      if( operacion.concepto.trim() === '' || operacion.categoria.trim() === '' || operacion.fecha.trim() === '' || operacion.tipo.trim() === '' || operacion.monto.trim() === ''){
-          mostrarAlerta({
-              msj: 'Todos los campos son obligatorios',
-              error: true
-          })
-          return;
-      }
+    if( operacion.concepto.trim() === '' || operacion.categoria.trim() === '' || operacion.fecha.trim() === '' || operacion.tipo.trim() === '' || operacion.monto.trim() === ''){
+      mostrarAlerta({
+        msj: 'Todos los campos son obligatorios',
+        error: true
+      })
+      return;
+    }
+
+    crearOperacion(operacion);
+
+    setOperacion({
+      concepto: '',
+      categoria: '',
+      fecha: formatoFecha,
+      tipo: '',
+      monto: ''
+    })
 
 }
 
@@ -56,6 +75,7 @@ const NuevaOperacion = () => {
                       name='concepto' 
                       placeholder='Concepto' 
                       onChange={manejarCambios} 
+                      value={operacion.concepto}
                       required
                     />
                   </div>
@@ -64,12 +84,15 @@ const NuevaOperacion = () => {
                     <select 
                       className='form-control'
                       name='categoria' 
-                      id='categoria' 
+                      id='categoria'
+                      value={operacion.categoria} 
                       onChange={manejarCambios} 
                       required
                     >
                       <option value=''>-- Seleccione la categoria --</option>
-                      <option value='comida'>Comida</option>
+                      {categorias.map( (categoria, index) => (
+                        <option value={categoria.nombre} key={index}>{categoria.nombre}</option>
+                      ))}
                     </select>
                   </div>
                   <div className="form-group row">
@@ -81,6 +104,7 @@ const NuevaOperacion = () => {
                           id='fecha' 
                           name='fecha' 
                           onChange={manejarCambios} 
+                          value={operacion.fecha}
                           required
                         />
                     </div>
@@ -91,6 +115,7 @@ const NuevaOperacion = () => {
                           className="form-control" 
                           name='monto' 
                           id="monto" 
+                          value={operacion.monto}
                           onChange={manejarCambios} 
                           required
                         />
@@ -102,7 +127,7 @@ const NuevaOperacion = () => {
                           type='radio' 
                           name='tipo' 
                           id='ingreso' 
-                          value='ingreso' 
+                          value='INGRESO' 
                           className='form-check-input' 
                           onChange={manejarCambios} 
                           required
@@ -114,7 +139,7 @@ const NuevaOperacion = () => {
                           type='radio' 
                           name='tipo' 
                           id='egreso' 
-                          value='egreso' 
+                          value='EGRESO' 
                           className='form-check-input' 
                           onChange={manejarCambios} 
                           required

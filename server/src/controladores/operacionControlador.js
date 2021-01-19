@@ -24,7 +24,6 @@ exports.obtenerOperaciones = async ( req, res ) => {
             //busqueda por categoria
             operaciones = await Operacion.find({categoria: categoria},{},{ sort: { fecha: -1 }, limit:limite});
         }
-
         res.json({
             operaciones
         });
@@ -129,6 +128,63 @@ exports.eliminarOperacion = async ( req, res ) => {
 
         res.status(500).json({
             msg: "No se pudo eliminar la operacion, intente mas tarde"
+        })
+    }
+}
+
+//obtener el balance de las operaciones
+exports.obtenerBalance = async ( req, res ) => {
+
+    try {
+        //traemos la suma de ingresos 
+        const ingresos = await Operacion.aggregate([
+            {
+                $match: { tipo: "INGRESO"}
+            },
+            {
+                $group : {
+                    _id: null,
+                    totalSuma: { $sum: "$monto"},
+                }
+            }
+        ]);
+
+        //traemos la suma de egresos
+        const egresos = await Operacion.aggregate([
+            {
+                $match: { tipo: "EGRESO"}
+            },
+            {
+                $group : {
+                    _id: null,
+                    totalSuma: { $sum: "$monto"},
+                }
+            }
+        ]);
+
+        let balance = 0;
+
+        //si existen operacion de ingresos, sumamos al balance
+        if( ingresos.length !== 0 ){
+            balance += ingresos[0].totalSuma;
+        }
+
+        //si existen operacion de egresos, restamos al balance
+        if(  egresos.length !== 0 ){
+            balance -= egresos[0].totalSuma
+        }
+
+        console.log("hola")
+
+        res.json({
+            balance
+        })
+        
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).json({
+            msg: "No se pudo obtener el balance"
         })
     }
 }

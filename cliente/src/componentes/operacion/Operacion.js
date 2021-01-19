@@ -11,7 +11,7 @@ const Operacion = () => {
     const { fecha, concepto, categoria, tipo, monto} = operacionSeleccionada;
 
     return ( 
-        <div className={`${ operacionSeleccionada.tipo === 'ingreso' ? "table-success" : "table-danger" } rounded p-3`}>
+        <div className={`${ operacionSeleccionada.tipo === 'INGRESO' ? "table-success" : "table-danger" } rounded p-3`}>
             <div className='d-flex justify-content-between align-items-center'>
                 <div className='text-left'>
                     <p className='mb-0'>{fecha}</p>
