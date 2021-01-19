@@ -1,4 +1,4 @@
-import { ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENEROPERACIONES, SELECCIONAROPERACION } from "../../types";
+import { CREAROPERACION, ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENERCATEGORIAS, OBTENEROPERACIONES, SELECCIONAROPERACION } from "../../types";
 
 
 export default (state, action) => {
@@ -21,15 +21,25 @@ export default (state, action) => {
         case ELIMINAROPERACION:
             return {
                 ...state,
-                ultimasOperaciones: state.ultimasOperaciones.filter(operacion => operacion.idOperacion !== action.payload.idOperacion),
-                operaciones: state.operaciones.filter(operacion => operacion.idOperacion !== action.payload.idOperacion),
-                balance: ( action.payload.tipo === 'ingreso') ? state.balance - action.payload.monto : state.balance + action.payload.monto,
+                ultimasOperaciones: state.ultimasOperaciones.filter(operacion => operacion._id !== action.payload._id),
+                operaciones: state.operaciones.filter(operacion => operacion._id !== action.payload._id),
+                balance: ( action.payload.tipo === 'INGRESO') ? state.balance - action.payload.monto : state.balance + action.payload.monto,
                 operacionSeleccionada: null,
+            }
+        case CREAROPERACION: 
+            return{
+                ...state,
+                ultimasOperaciones: [action.payload, ...state.ultimasOperaciones]
             }
         case OBTENERBALANCE:
             return {
                 ...state,
                 balance: action.payload
+            }
+        case OBTENERCATEGORIAS:
+            return{
+                ...state,
+                categorias: action.payload
             }
         default:
             return state;

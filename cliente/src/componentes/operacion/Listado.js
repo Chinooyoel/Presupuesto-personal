@@ -33,9 +33,9 @@ const Listado = ({operaciones}) => {
                     <tbody>
                         {operaciones.map( operacion => (
                             <tr 
-                                className={`${ operacion.tipo === 'ingreso' ? "table-success" : "table-danger" } pointer`} 
+                                className={`${ operacion.tipo === 'INGRESO' ? "table-success" : "table-danger" } pointer`} 
                                 onClick={() => elegirOperacion(operacion)}
-                                key={operacion.idOperacion}
+                                key={operacion._id}
                             >
                                 <td>{operacion.fecha}</td>
                                 <td>{operacion.concepto}</td>

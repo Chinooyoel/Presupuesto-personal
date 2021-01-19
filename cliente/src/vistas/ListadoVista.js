@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext, useState } from 'react';
 import Navbar from '../componentes/layout/Navbar';
 import Footer from '../componentes/layout/Footer';
 import Listado from '../componentes/operacion/Listado';
@@ -7,12 +7,27 @@ import operacionContext from '../context/operacion/operacionContext';
 
 const ListadoVista = () => {
 
-    const {operaciones, obtenerOperaciones} = useContext(operacionContext);
+    const {operaciones, categorias, obtenerOperaciones, obtenerCategorias} = useContext(operacionContext);
 
-    //cargue las operaciones cuando cargue el componente
+    //cargue las operaciones y las categorias cuando cargue el componente
     useEffect(() => {
         obtenerOperaciones();
+        obtenerCategorias();
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
+    const buscarPorCategoria = e => {
+        e.preventDefault();
+
+        //si no eligio ninguna categoria, traer todas
+        if( categoria === "" ){
+            obtenerOperaciones();
+            return
+        }
+
+        obtenerOperaciones(categoria);        
+    }
+
+    const [categoria, cambiarCategoria] = useState('');
 
     return ( 
         <Fragment>
@@ -25,13 +40,25 @@ const ListadoVista = () => {
                         <div className='justify-content-center d-flex'>
                             <Operacion />
                         </div>
-                        <div className='form-inline justify-content-center my-2'>
+                        <form 
+                            className='form-inline justify-content-center my-2'
+                            onSubmit={buscarPorCategoria}
+                        >
                             <label htmlFor='categoria' className='mr-2'>Filtrar por categoria: </label>
-                            <select className="form-control" id='categoria' name='categoria'>
-                                <option value=''>-- Seleccione una categoria --</option>
-                                <option value='comida'>Comida</option>
+                            <select 
+                                className="form-control" 
+                                id='categoria' 
+                                name='categoria'
+                                value={categoria}
+                                onChange={e => cambiarCategoria(e.target.value)}
+                            >
+                                <option value=''>-- TODAS --</option>
+                                {categorias.map( (categoria, index) => (
+                                    <option value={categoria.nombre} key={index}>{categoria.nombre}</option>
+                                ))}
                             </select>
-                        </div>
+                            <button className='btn btn-primary mt-2 ml-sm-2 mt-sm-0' type='submit'>Filtrar</button>
+                        </form>
                         <Listado operaciones={operaciones}/>
                     </div>
                 </div>

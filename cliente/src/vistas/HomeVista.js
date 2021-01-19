@@ -10,12 +10,15 @@ const HomeVista = () => {
 
     const { ultimasOperaciones, balance, obtenerUltimasOperaciones, obtenerBalance } = useContext(operacionContext)
 
-    //para cargar las ultimas 10 operaciones y el balance de las operaciones, cuando cargue la pagina
+    //para cargar las ultimas 10 operaciones cuando cargue el componente
     useEffect(() => {
         obtenerUltimasOperaciones();    
-        obtenerBalance();
-
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
+    //para que se actualize el balance cada vez que cambie las ultimas operaciones
+    useEffect(() => { 
+        obtenerBalance();
+    }, [ultimasOperaciones])// eslint-disable-line react-hooks/exhaustive-deps
 
     return ( 
         <Fragment>
