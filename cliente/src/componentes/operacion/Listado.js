@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import operacionContext from '../../context/operacion/operacionContext';
-
+import { Table } from 'react-bootstrap';
 
 const Listado = ({operaciones}) => {
 
@@ -20,7 +20,7 @@ const Listado = ({operaciones}) => {
     }
 
     return ( 
-                <table className='table table-hover w-100 text-center'>
+                <Table hover="true" className='w-100 text-center'>
                     <thead>
                         <tr className='bg-dark text-white'>
                             <th>Fecha</th>
@@ -45,7 +45,7 @@ const Listado = ({operaciones}) => {
                             </tr>
                         ))}
                     </tbody>
-                </table>
+                </Table>
                 
     );
 }

@@ -1,8 +1,9 @@
 import React, {useState, useContext, useEffect} from 'react';
+import { Form, Modal, Row, Button, Col } from 'react-bootstrap';
 import alertaContext from '../../context/alerta/alertaContext';
 import operacionContext from '../../context/operacion/operacionContext';
 
-const NuevaOperacion = () => {
+const NuevaOperacion = ({modal, mostrarModal}) => {
 
   const formatoFecha = new Date().toISOString().split('T')[0];;
 
@@ -51,26 +52,24 @@ const NuevaOperacion = () => {
       monto: ''
     })
 
+    //ocultamos el modal
+    mostrarModal(false);
 }
 
     return ( 
-        <div className="modal fade" id="nuevaOperacion" tabIndex="-1" aria-labelledby="nuevaOperacion" aria-hidden="true">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Nueva operacion</h5>
-                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div className="modal-body">
+            <Modal show={modal} onHide={ () => mostrarModal(false)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Nueva operacion</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
 
                 {alerta ? (<p className={alerta.clase}>{alerta.mensaje}</p>) : null}
 
-                <form id='formOperacion'>
+                <Form.Group id='formOperacion'>
                   <div className="form-group">
                     <label htmlFor="concepto" className="col-form-label" >Concepto</label>
-                    <input 
+                    <Form.Control
                       type="text" 
-                      className="form-control" 
                       id="concepto" 
                       name='concepto' 
                       placeholder='Concepto' 
@@ -81,8 +80,7 @@ const NuevaOperacion = () => {
                   </div>
                   <div className="form-group">
                     <label htmlFor="categoria" className="col-form-label">Categoria</label>
-                    <select 
-                      className='form-control'
+                    <Form.Control as="select"
                       name='categoria' 
                       id='categoria'
                       value={operacion.categoria} 
@@ -93,54 +91,50 @@ const NuevaOperacion = () => {
                       {categorias.map( (categoria, index) => (
                         <option value={categoria.nombre} key={index}>{categoria.nombre}</option>
                       ))}
-                    </select>
+                    </Form.Control>
                   </div>
-                  <div className="form-group row">
-                    <div className='col-12 col-md-6'>
+                  <Row className="form-group">
+                    <Col xs={12} md={6}>
                         <label htmlFor="fecha" className="col-form-label">Fecha</label>
-                        <input 
+                        <Form.Control
                           type='date' 
-                          className="form-control" 
                           id='fecha' 
                           name='fecha' 
                           onChange={manejarCambios} 
                           value={operacion.fecha}
                           required
                         />
-                    </div>
-                    <div className='col-12 col-md-6'>
+                    </Col>
+                    <Col xs={12} md={6}>
                         <label htmlFor="monto" className="col-form-label">Monto</label>
-                        <input 
+                        <Form.Control
                           type='number' 
-                          className="form-control" 
                           name='monto' 
                           id="monto" 
                           value={operacion.monto}
                           onChange={manejarCambios} 
                           required
                         />
-                    </div>
-                  </div>
+                    </Col>
+                  </Row>
                   <div className='d-flex justify-content-center'>
                     <div className="form-check form-check-inline">
-                        <input 
+                        <Form.Check
                           type='radio' 
                           name='tipo' 
                           id='ingreso' 
                           value='INGRESO' 
-                          className='form-check-input' 
                           onChange={manejarCambios} 
                           required
                         />
                         <label htmlFor="ingreso" className="form-check-label">Ingreso</label>
                     </div>
                     <div className='form-check form-check-inline'>
-                        <input 
+                        <Form.Check
                           type='radio' 
                           name='tipo' 
                           id='egreso' 
-                          value='EGRESO' 
-                          className='form-check-input' 
+                          value='EGRESO'
                           onChange={manejarCambios} 
                           required
                         />
@@ -148,15 +142,21 @@ const NuevaOperacion = () => {
                     </div>
                   </div>
 
-                </form>
-              </div>
-              <div className="modal-footer">
-                <button type="submit" className="btn btn-primary" form='formOperacion' onClick={validarOperacion}>Crear</button>
-                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-              </div>
-            </div>
-          </div>
-        </div>
+                </Form.Group>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button 
+                  variant="primary"
+                  type="submit" 
+                  form='formOperacion' 
+                  onClick={validarOperacion}
+                >Crear</Button>
+                <Button 
+                  variant="secondary"
+                  onClick={ () => mostrarModal(false)}
+                >Cancelar</Button>
+              </Modal.Footer>
+            </Modal>
      );
 }
  

@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
+import { Button } from 'react-bootstrap';
 import operacionContext from '../../context/operacion/operacionContext';
 
-const Operacion = () => {
+const Operacion = ({mostrarModal}) => {
 
     const {operacionSeleccionada, eliminarOperacion} = useContext(operacionContext);
 
@@ -25,18 +26,15 @@ const Operacion = () => {
                 </div>
             </div>
             <div className='text-right my-2'>
-                <button 
-                    className='btn btn-primary mr-2' 
-                    type="button" 
-                    data-toggle="collapse" 
-                    data-target="#collapseExample" 
-                    aria-expanded="false" 
-                    aria-controls="collapseExample"
-                >MODIFICAR MONTO</button>
-                <button 
-                    className='btn btn-danger' 
+                <Button
+                    variant="primary"
+                    className='mr-2'
+                    onClick={() => mostrarModal(true)}
+                >MODIFICAR MONTO</Button>
+                <Button 
+                    variant='danger'
                     onClick={() => eliminarOperacion(operacionSeleccionada)}
-                >ELIMINAR</button>
+                >ELIMINAR</Button>
             </div>
         </div>
     );

@@ -14,7 +14,6 @@ exports.obtenerOperaciones = async ( req, res ) => {
 
     try {
         let operaciones;
-
         //si no eligio categoria
         if( !categoria ){
 
@@ -173,8 +172,6 @@ exports.obtenerBalance = async ( req, res ) => {
         if(  egresos.length !== 0 ){
             balance -= egresos[0].totalSuma
         }
-
-        console.log("hola")
 
         res.json({
             balance
