@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import { CREAROPERACION, ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENEROPERACIONES, SELECCIONAROPERACION, OBTENERCATEGORIAS } from '../../types';
+import { CREAROPERACION, ELIMINAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENEROPERACIONES, SELECCIONAROPERACION, OBTENERCATEGORIAS, MODIFICAROPERACION } from '../../types';
 import OperacionContext from './operacionContext';
 import operacionReducer from './operacionReducer';
 import clienteAxios from '../../config/axios';
@@ -130,6 +130,21 @@ const OperacionState = props => {
             console.log(error)
         }
     }
+
+    //modificar monto de la operacion
+    const modificarOperacion = async (idOperacion, monto) => {
+        try {
+            const respuesta = await clienteAxios.put(`/operaciones/${idOperacion}`, {monto});
+            
+            dispatch({
+                type: MODIFICAROPERACION,
+                payload: respuesta.data.operacion
+            })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return(
         <OperacionContext.Provider
             value={{
@@ -144,7 +159,8 @@ const OperacionState = props => {
                 eliminarOperacion,
                 obtenerBalance,
                 crearOperacion,
-                obtenerCategorias
+                obtenerCategorias,
+                modificarOperacion
             }}
         >
             {props.children}

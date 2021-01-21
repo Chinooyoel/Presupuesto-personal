@@ -1,4 +1,5 @@
 import React, {useState, useContext} from 'react';
+import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import alertaContext from '../../context/alerta/alertaContext';
 
@@ -34,18 +35,18 @@ const NuevaCuenta = () => {
 
     }
     return ( 
-        <div className='container-fluid bg-azul'>
-            <div className='row vh-100 justify-content-center align-items-center'>
-                <div className='col-12 col-sm-8 col-lg-5 col-xl-3 bg-light rounded'>
-                    <form className='my-5 mx-2' onSubmit={validarUsuario}>
+        <Container fluid className='bg-azul'>
+            <Row className='vh-100 justify-content-center align-items-center'>
+                <Col xs={12} sm={8} lg={5} xl={3} className='bg-light rounded'>
+                    <Form.Group className='my-5 mx-2' onSubmit={validarUsuario}>
                         <h3 className='text-center text-primary mb-4'>Registrarse</h3>
 
-                        { alerta ? <p className={alerta.clase}>{alerta.mensaje}</p> : null}
+                        { alerta ? (<Alert variant={alerta.clase}>{alerta.mensaje}</Alert>) : null}
 
-                        <div className='form-group row'>
-                            <label className='col-3' htmlFor='nombre'>Nombre</label>
-                            <div className='col-9'>
-                                <input 
+                        <Row className='form-group'>
+                            <Col xs={3} as="label" htmlFor='nombre'>Nombre</Col>
+                            <Col xs={9}>
+                                <Form.Control
                                     type='text' 
                                     className='form-control' 
                                     id='nombre' 
@@ -55,11 +56,11 @@ const NuevaCuenta = () => {
                                     value={usuario.nombre} 
                                     required
                                 />
-                            </div>
-                        </div>
-                        <div className='form-group row'>
-                            <label className='col-3' htmlFor='email'>Email</label>
-                            <div className='col-9'>
+                            </Col>
+                        </Row>
+                        <Row className='form-group'>
+                            <Col xs={3} as="label" htmlFor='email'>Email</Col>
+                            <Col xs={9}>
                                 <input 
                                     type='email' 
                                     className='form-control' 
@@ -69,12 +70,12 @@ const NuevaCuenta = () => {
                                     onChange={manejarCambios} 
                                     value={usuario.email} 
                                     required/>
-                            </div>
-                        </div>
-                        <div className='form-group row'>
-                            <label className='col-3' htmlFor='password'>Password</label>
-                            <div className='col-9'>
-                                <input 
+                            </Col>
+                        </Row>
+                        <Row className='form-group'>
+                            <Col xs={3} as="label" htmlFor='password'>Password</Col>
+                            <Col xs={9}>
+                                <Form.Control
                                     type='password' 
                                     className='form-control' 
                                     id='password' 
@@ -84,14 +85,14 @@ const NuevaCuenta = () => {
                                     value={usuario.password} 
                                     required
                                 />
-                            </div>    
-                        </div>
-                        <button type='submit' className='w-100 btn btn-primary my-3'>Registrarse</button>
+                            </Col>    
+                        </Row>
+                        <Button variant="primary" type='submit' className='w-100 my-3'>Registrarse</Button>
                         <Link to={'/login'}>Volver</Link>
-                    </form>
-                </div>
-            </div>
-        </div>
+                    </Form.Group>
+                </Col>
+            </Row>
+        </Container>
      );
 }
  

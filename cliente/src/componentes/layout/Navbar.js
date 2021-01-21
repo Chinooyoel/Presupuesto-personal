@@ -1,31 +1,30 @@
 import React from 'react';
+import { Button, Nav, Navbar, Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
 
-const Navbar = () => {
+const NavbarComponente = () => {
     return ( 
-        <nav className="navbar navbar-expand-lg navbar-dark bg-azul">
-            <div className='container'>
+        <Navbar expand="lg" className="navbar-dark bg-azul">
+            <Container>
                 <Link to={'/'} className="h1 text-white">Presupuestar</Link>
-                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                    <span className="navbar-toggler-icon"></span>
-                </button>
+                <Navbar.Toggle aria-controls="navbarToggler"/>
 
-                <div className="collapse navbar-collapse justify-content-end" id="navbarToggler">
-                    <ul className="navbar-nav ms-auto mt-2 mt-lg-0 text-center">
-                        <li className="nav-item active">
+                <Navbar.Collapse className="justify-content-end" id="navbarToggler">
+                    <Nav className="ms-auto mt-2 mt-lg-0 text-center">
+                        <Nav.Item className="nav-item active">
                             <Link to={'/'} className="nav-link text-white">Inicio</Link>
-                        </li>
-                        <li className="nav-item">
+                        </Nav.Item>
+                        <Nav.Item className="nav-item">
                             <Link to={'/listado'} className="nav-link text-white">Operaciones</Link>
-                        </li>
-                        <li className="nav-item">
-                            <button className='btn btn-outline-light'>Cerrar sesion</button>
-                        </li>
-                    </ul>
-                </div>   
-            </div> 
-        </nav>
+                        </Nav.Item>
+                        <Nav.Item className="nav-item">
+                            <Button variant="outline-light">Cerrar sesion</Button>
+                        </Nav.Item>
+                    </Nav>
+                </Navbar.Collapse>   
+            </Container> 
+        </Navbar>
      );
 }
  
-export default Navbar;
+export default NavbarComponente;

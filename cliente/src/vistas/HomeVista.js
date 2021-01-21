@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext, useState } from 'react';
 import Navbar from '../componentes/layout/Navbar';
 import Listado from '../componentes/operacion/Listado';
 import NuevaOperacion from '../componentes/operacion/NuevaOperacion';
 import Footer from '../componentes/layout/Footer';
 import operacionContext from '../context/operacion/operacionContext';
-
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 const HomeVista = () => {
 
@@ -20,24 +20,30 @@ const HomeVista = () => {
         obtenerBalance();
     }, [ultimasOperaciones])// eslint-disable-line react-hooks/exhaustive-deps
 
+    // State del modal NuevaOperacion
+    const [modal, mostrarModal] = useState(false);
+
     return ( 
         <Fragment>
             <Navbar/>
-            <NuevaOperacion/>
-            <main className='container py-3 scrollUp'>
-                <div className='row'>
-                    <div className='col-12 text-center mb-2'>
+            <NuevaOperacion 
+                modal={modal}
+                mostrarModal={mostrarModal}
+            />
+            <Container as='main' className='py-3 scrollUp'>
+                <Row>
+                    <Col xs={12} className='text-center mb-2'>
                         <div className='justify-content-end d-flex mb-3'>
-                            <button className='btn btn-primary' data-bs-toggle="modal" data-bs-target="#nuevaOperacion">Agregar Operacion</button>
+                            <Button variant="success" onClick={() => mostrarModal(true)}>Agregar Operacion</Button>
                         </div>
                         <h3 className='text-primary'>Balance Actual</h3>
                         <p className='display-4 animate__animated animate__tada'>${balance}.00</p>
-                    </div>
-                    <div className='col-12'>
+                    </Col>
+                    <Col xs={12}>
                         <Listado operaciones={ultimasOperaciones}/>
-                    </div>
-                </div>
-            </main>
+                    </Col>
+                </Row>
+            </Container>
             <Footer/>
         </Fragment>
      );
