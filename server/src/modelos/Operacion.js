@@ -23,6 +23,11 @@ const OperacionSchema = new Schema({
     monto: {
         type: Number,
         required: true,
+    },
+    usuarioId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Usuario'
     }
 })
 

@@ -18,7 +18,8 @@ app.use(cors());
 //importamos las rutas
 app.use('/operaciones', require('./rutas/operaciones.js'));
 app.use('/categorias', require('./rutas/categorias.js'));
-
+app.use('/usuarios', require('./rutas/usuarios.js'));
+app.use('/auth', require('./rutas/auth.js'));
 
 const PORT = process.env.PORT || 8080;
 
