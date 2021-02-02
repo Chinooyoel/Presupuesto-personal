@@ -17,11 +17,11 @@ exports.obtenerOperaciones = async ( req, res ) => {
         //si no eligio categoria
         if( !categoria ){
 
-            operaciones = await Operacion.find({},{},{ sort: { fecha: -1 }, limit: limite});
+            operaciones = await Operacion.find({ usuarioId: req.usuario },{},{ sort: { fecha: -1 }, limit: limite});
 
         } else{
             //busqueda por categoria
-            operaciones = await Operacion.find({categoria: categoria},{},{ sort: { fecha: -1 }, limit:limite});
+            operaciones = await Operacion.find({categoria: categoria, usuarioId: req.usuario},{},{ sort: { fecha: -1 }, limit:limite});
         }
         res.json({
             operaciones
@@ -45,8 +45,8 @@ exports.crearOperacion = async ( req, res ) => {
     }
 
     try {
-        //guardamos la operacion
-        const operacion = new Operacion(req.body);
+        //guardamos la operacion y le asignamos el id del usuario loguiado
+        const operacion = new Operacion({...req.body, usuarioId: req.usuario});
         const operacionCreada = await operacion.save();
 
         res.json({
@@ -85,6 +85,12 @@ exports.actualizarOperacion = async ( req, res ) => {
             })
         }
 
+
+        //validamos que la operacion le pertenezca al usuario loguiado
+        if( req.usuario !== operacion.usuarioId.toString() ){
+            return res.status(401).json({ msg: 'No autorizado'})
+        }
+
         //actualizamos la operacion
         const operacionActualizada = await Operacion.findByIdAndUpdate({_id: idOperacion}, { monto }, {new: true});
 
@@ -116,6 +122,11 @@ exports.eliminarOperacion = async ( req, res ) => {
             })
         }
 
+        //validamos que la operacion le pertenezca al usuario loguiado
+        if( req.usuario !== operacion.usuarioId.toString() ){
+            return res.status(401).json({ msg: 'No autorizado'})
+        }
+
         //borramos la operacion
         await Operacion.findByIdAndDelete({_id: idOperacion})
 
@@ -138,7 +149,7 @@ exports.obtenerBalance = async ( req, res ) => {
         //traemos la suma de ingresos 
         const ingresos = await Operacion.aggregate([
             {
-                $match: { tipo: "INGRESO"}
+                $match: { tipo: "INGRESO", usuarioId: req.usuario}
             },
             {
                 $group : {
@@ -151,7 +162,7 @@ exports.obtenerBalance = async ( req, res ) => {
         //traemos la suma de egresos
         const egresos = await Operacion.aggregate([
             {
-                $match: { tipo: "EGRESO"}
+                $match: { tipo: "EGRESO", usuarioId: req.usuario }
             },
             {
                 $group : {
