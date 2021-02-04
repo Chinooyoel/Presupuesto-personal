@@ -1,8 +1,15 @@
 const jwt = require('jsonwebtoken');
 const Usuario = require('../modelos/Usuario');
 const bcrypt = require('bcrypt');
+const { validationResult } = require("express-validator");
 
 exports.validarCredenciales = async ( req, res ) => {
+    //comprobamos si hubo errores en las validaciones
+    const errores = validationResult(req);
+    if (!errores.isEmpty()) {
+        return res.status(400).json({ msg: errores.array() });
+    }
+
     const { email, password } = req.body;
 
     try {
@@ -11,7 +18,7 @@ exports.validarCredenciales = async ( req, res ) => {
         //comprobamos si existe el usuario
         if(!usuario) {
             return res.status(400).json({
-                msg: "Credenciadas invalidas email"
+                msg: "Credenciadas invalidas"
             })
         }
         
@@ -20,7 +27,7 @@ exports.validarCredenciales = async ( req, res ) => {
 
         if(!passwordCorrecta){
             return res.status(400).json({
-                msg: "Credenciadas invalidas password"
+                msg: "Credenciadas invalidas"
             })
         }
 
@@ -32,6 +39,29 @@ exports.validarCredenciales = async ( req, res ) => {
         //retornamos el token
         res.json({
             token
+        })
+
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).json({
+            msg: "Error interno. Intente mas tarde"
+        })
+    }
+
+}
+
+
+exports.usuarioAutenticado = async (req, res) => {
+
+    try {
+        const { nombre, email } = await Usuario.findOne({_id: req.usuario});
+
+        res.json({
+            usuario: {
+                nombre,
+                email
+            }
         })
 
     } catch (error) {

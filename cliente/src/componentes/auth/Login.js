@@ -1,11 +1,28 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import alertaContext from '../../context/alerta/alertaContext';
 import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
+import authContext from '../../context/autenticacion/authContext';
 
-const Login = () => {
+const Login = (props) => {
 
     const { alerta, mostrarAlerta } = useContext(alertaContext);
+    const { autenticado, msg, iniciarSesion } = useContext(authContext);
+
+    //Para redirigirlo a la pagina principal, si esta loguiado
+    //o si existe el token
+    useEffect(() => {
+        if(autenticado){
+            props.history.push('/');
+        }
+
+        if(msg != null) {
+            mostrarAlerta({
+                msj: msg,
+                error: true
+            })
+        }
+    }, [autenticado, msg])
 
     const [usuario, setUsuario] = useState({
         email: '',
@@ -30,13 +47,15 @@ const Login = () => {
             })
             return;
         }
+
+        iniciarSesion(usuario.email, usuario.password)
     }
 
     return ( 
         <Container fluid className='bg-azul'>
             <Row className='row vh-100 justify-content-center align-items-center'>
                 <Col md={8} lg={5} xl={3} className='bg-light rounded'>
-                    <Form.Group className='my-5 mx-2' onSubmit={validarUsuario}>
+                    <Form.Group className='my-5 mx-2'>
                         <h3 className='text-center text-primary mb-4'>Iniciar sesion</h3>
                         { !alerta ? null : (<Alert variant={alerta.clase}>{alerta.mensaje}</Alert>)}
                         <Row className='form-group'>
@@ -71,6 +90,7 @@ const Login = () => {
                             type='submit' 
                             variant='primary'
                             className='my-3 w-100'
+                            onClick={validarUsuario}
                         >Iniciar sesion</Button>
                         <Link to={'/registrarse'}>Registrarse</Link>
                     </Form.Group>

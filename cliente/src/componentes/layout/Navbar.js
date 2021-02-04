@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Nav, Navbar, Container } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import authContext from '../../context/autenticacion/authContext';
 
 const NavbarComponente = () => {
+
+    const { cerrarSesion } = useContext(authContext);
+
     return ( 
         <Navbar expand="lg" className="navbar-dark bg-azul">
             <Container>
@@ -18,7 +22,10 @@ const NavbarComponente = () => {
                             <Link to={'/listado'} className="nav-link text-white">Operaciones</Link>
                         </Nav.Item>
                         <Nav.Item className="nav-item">
-                            <Button variant="outline-light">Cerrar sesion</Button>
+                            <Button 
+                                variant="outline-light"
+                                onClick={cerrarSesion}
+                            >Cerrar sesion</Button>
                         </Nav.Item>
                     </Nav>
                 </Navbar.Collapse>   
