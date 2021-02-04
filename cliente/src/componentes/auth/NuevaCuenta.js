@@ -1,17 +1,33 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import { Alert, Button, Col, Container, Form, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import alertaContext from '../../context/alerta/alertaContext';
+import authContext from '../../context/autenticacion/authContext';
 
-const NuevaCuenta = () => {
+const NuevaCuenta = props => {
 
     const [usuario, setUsuario] = useState({
         nombre: '',
         email: '',
-        passowrd: ''
+        password: ''
     });
 
     const {alerta, mostrarAlerta} = useContext(alertaContext);
+    const { autenticado, msg, registrarUsuario } = useContext(authContext);
+
+    //Para redirigirlo a la pagina principal, si esta loguiado
+    useEffect(() => {
+        if(autenticado){
+            props.history.push('/');
+        }
+
+        if(msg != null) {
+            mostrarAlerta({
+                msj: msg,
+                error: true
+            })
+        }
+    }, [autenticado, msg])
 
     const manejarCambios = e => {
         setUsuario({
@@ -33,12 +49,18 @@ const NuevaCuenta = () => {
             return;
         }
 
+        registrarUsuario({ 
+            email: usuario.email, 
+            nombre: usuario.nombre, 
+            password: usuario.password 
+        });
+
     }
     return ( 
         <Container fluid className='bg-azul'>
             <Row className='vh-100 justify-content-center align-items-center'>
                 <Col xs={12} sm={8} lg={5} xl={3} className='bg-light rounded'>
-                    <Form.Group className='my-5 mx-2' onSubmit={validarUsuario}>
+                    <Form.Group className='my-5 mx-2'>
                         <h3 className='text-center text-primary mb-4'>Registrarse</h3>
 
                         { alerta ? (<Alert variant={alerta.clase}>{alerta.mensaje}</Alert>) : null}
@@ -87,7 +109,7 @@ const NuevaCuenta = () => {
                                 />
                             </Col>    
                         </Row>
-                        <Button variant="primary" type='submit' className='w-100 my-3'>Registrarse</Button>
+                        <Button variant="primary" type='submit' className='w-100 my-3' onClick={validarUsuario}>Registrarse</Button>
                         <Link to={'/login'}>Volver</Link>
                     </Form.Group>
                 </Col>

@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Route, Redirect } from 'react-router-dom';
+import authContext from '../context/autenticacion/authContext';
 
 const RutaPrivada = ({component: Component, ...props}) => {
-    let autenticado = false;
+
+    const { autenticado, usuarioAutenticado } = useContext(authContext);
+
+    useEffect(() => {
+        usuarioAutenticado();
+    }, [])
+
     return ( 
         <Route { ...props } render={props => autenticado ?
-            ( <Redirect to='/login' /> ) : ( <Component {...props} />)
+            ( <Component {...props} />) : ( <Redirect to='/login' /> )
         }
         />
      );

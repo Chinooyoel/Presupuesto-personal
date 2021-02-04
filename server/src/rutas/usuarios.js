@@ -5,7 +5,7 @@ const { check } = require('express-validator');
 
 
 //crear usuario
-// /usuario
+// /usuarios
 router.post('/',[
     check('nombre', "El concepto es obligatorio").not().isEmpty().trim(),
     check('password', "El monto es obligatorio").not().isEmpty().trim(),

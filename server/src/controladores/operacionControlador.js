@@ -1,5 +1,6 @@
 const Operacion = require('../modelos/Operacion');
 const { validationResult } = require('express-validator');
+const mongoose = require('mongoose')
 
 //obtener todos las operaciones
 exports.obtenerOperaciones = async ( req, res ) => {
@@ -149,11 +150,11 @@ exports.obtenerBalance = async ( req, res ) => {
         //traemos la suma de ingresos 
         const ingresos = await Operacion.aggregate([
             {
-                $match: { tipo: "INGRESO", usuarioId: req.usuario}
+                $match: { tipo: "INGRESO", usuarioId: mongoose.Types.ObjectId(req.usuario) }
             },
             {
                 $group : {
-                    _id: null,
+                    _id: req.usuario,
                     totalSuma: { $sum: "$monto"},
                 }
             }
@@ -162,7 +163,7 @@ exports.obtenerBalance = async ( req, res ) => {
         //traemos la suma de egresos
         const egresos = await Operacion.aggregate([
             {
-                $match: { tipo: "EGRESO", usuarioId: req.usuario }
+                $match: { tipo: "EGRESO", usuarioId: mongoose.Types.ObjectId(req.usuario) }
             },
             {
                 $group : {
@@ -173,6 +174,8 @@ exports.obtenerBalance = async ( req, res ) => {
         ]);
 
         let balance = 0;
+
+        console.log( egresos, ingresos )
 
         //si existen operacion de ingresos, sumamos al balance
         if( ingresos.length !== 0 ){
