@@ -52,7 +52,7 @@ const AuthState = props => {
         tokenAuth(token);
 
         try {
-            const usuario = await clienteAxios.get('/auth');
+            await clienteAxios.get('/auth');
 
             dispatch({
                 type: INICIAR_SESION,

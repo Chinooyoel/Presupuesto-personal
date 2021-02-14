@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form, Modal, Button, Col, Row } from 'react-bootstrap';
+import { Form, Modal, Button, Col } from 'react-bootstrap';
 import alertaContext from '../../context/alerta/alertaContext';
 import operacionContext from '../../context/operacion/operacionContext';
 

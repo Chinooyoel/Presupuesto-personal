@@ -1,7 +1,7 @@
 import { CREAROPERACION, ELIMINAROPERACION, MODIFICAROPERACION, OBTENER10OPERACIONES, OBTENERBALANCE, OBTENERCATEGORIAS, OBTENEROPERACIONES, SELECCIONAROPERACION } from "../../types";
 
 
-export default (state, action) => {
+const operacionReducer = (state, action) => {
     switch (action.type){
         case OBTENER10OPERACIONES:
             return {
@@ -55,3 +55,5 @@ export default (state, action) => {
             return state;
     }
 }
+
+export default operacionReducer;

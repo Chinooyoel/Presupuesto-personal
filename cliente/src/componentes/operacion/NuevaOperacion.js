@@ -21,7 +21,7 @@ const NuevaOperacion = ({modal, mostrarModal}) => {
   //para que carguen las categorias cuando cargue el componente
   useEffect(() => {
     obtenerCategorias();
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const manejarCambios = e => {
       setOperacion({
