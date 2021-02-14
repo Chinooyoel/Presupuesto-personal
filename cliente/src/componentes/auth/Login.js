@@ -22,7 +22,7 @@ const Login = (props) => {
                 error: true
             })
         }
-    }, [autenticado, msg])
+    }, [autenticado, msg])// eslint-disable-line react-hooks/exhaustive-deps
 
     const [usuario, setUsuario] = useState({
         email: '',

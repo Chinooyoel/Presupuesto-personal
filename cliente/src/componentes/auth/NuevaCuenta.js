@@ -27,7 +27,7 @@ const NuevaCuenta = props => {
                 error: true
             })
         }
-    }, [autenticado, msg])
+    }, [autenticado, msg])// eslint-disable-line react-hooks/exhaustive-deps
 
     const manejarCambios = e => {
         setUsuario({

@@ -1,7 +1,6 @@
 import { MOSTRARALERTA, OCULTARALERTA } from "../../types";
 
-
-export default (state, action) => {
+const alertaReducer = (state, action) => {
     switch(action.type) {
         case MOSTRARALERTA:
             return {
@@ -17,3 +16,5 @@ export default (state, action) => {
             return state;
     }
 }  
+
+export default alertaReducer;

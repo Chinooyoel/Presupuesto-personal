@@ -8,7 +8,7 @@ const RutaPrivada = ({component: Component, ...props}) => {
 
     useEffect(() => {
         usuarioAutenticado();
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
     return ( 
         <Route { ...props } render={props => autenticado ?
